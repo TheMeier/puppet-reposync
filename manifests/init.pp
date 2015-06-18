@@ -6,36 +6,27 @@
 #
 # Document parameters here.
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# [*log_directory*]
+#  optional specify directory for logs 
 #
-# === Variables
+# [*script_directory*]
+#  optional specify directory for cron scripts 
 #
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
-#
-# === Examples
-#
-#  class { 'reposync':
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2014 Your name here, unless otherwise noted.
-#
-class reposync {
+# [*target_base*]
+#  optional specify base directory under wich the repos will
+#  be kept
+# 
+# [*logrotate_enabled*]
+#  enable/disable logrotate 
+
+
+class reposync (
+  $log_directory      = $reposync::params::log_directory,
+  $script_directory   = $reposync::params::script_directory,
+  $target_base        = $reposync::params::target_base,
+  $logrotate_enabled  = $reposync::params::logrotate_enabled,
+
+) inherits reposync::params {
 	case $::osfamily {
 		'RedHat': {
 			$packages = ['yum-utils', 'createrepo']
@@ -45,8 +36,9 @@ class reposync {
 		}
 	}
 
-	$log_directory    = '/var/log/reposync'
-	$script_directory = '/var/lib/reposync'
+  if $logrotate_enabled {
+    class {'::reposync::logrotate': }
+  }
 
 	package{$packages:
 		ensure => installed
@@ -59,6 +51,11 @@ class reposync {
 
 	file{$script_directory:
 		alias  => 'reposync-scripts',
+		ensure => directory
+	}
+
+	file{ "${target_base}":
+		alias  => 'reposync-targets',
 		ensure => directory
 	}
 

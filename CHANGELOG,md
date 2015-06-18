@@ -1,0 +1,10 @@
+##2015-06-18 - 2.0.0
+
+### Features
+- Add params.pp
+- Add logrotate
+- Default repo target directory
+- Create repo target directory
+- Clean up docmetation
+
+

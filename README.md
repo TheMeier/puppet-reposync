@@ -52,9 +52,16 @@ for upgrading, you may wish to include an additional section here: Upgrading
 (For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
 
 ## Usage
-
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+<pre><code>
+  class {'::reposync': } ->
+  reposync::syncrepo {'centos-7.1.1503-base-x86_64':
+    day         => '*',
+    hour        => '22',
+    minute      => '30',
+    target_base => '/usr/local/repos',
+    target      => 'centos/7.1.1503-base/x86_64',
+  }
+</pre></code>
 
 ## Reference
 
