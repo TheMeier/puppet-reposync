@@ -22,7 +22,7 @@ define reposync::syncrepo($target, $day=absent, $hour='8', $minute='0', $ensure=
 				ensure  => present,
 				command => $script_path,
 				user    => $user,
-				day     => $day,
+				weekday => $day,
 				hour    => $hour,
 				minute  => $minute
 			}
